@@ -44,7 +44,7 @@ module.exports = function(html, h, cb) {
             currentItemList.add(item);
         },
         onend: function () {
-          cb(null, currentItemList.content);
+          cb(null, currentItemList.content[0]);
         }
     }, {decodeEntities: true});
 

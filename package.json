@@ -1,7 +1,7 @@
 {
   "name": "html2hs-args",
   "main": "./index.js",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "pass the converted html into hyperscript to callback",
   "keywords": [
     "html",

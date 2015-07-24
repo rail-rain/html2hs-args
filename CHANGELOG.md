@@ -1,2 +1,2 @@
-## 0.1.1 - First Release
-* fixed dependencies
+## 0.1.2 - third Release
+* fixed callback argument had become array
