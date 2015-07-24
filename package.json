@@ -1,7 +1,7 @@
 {
   "name": "html2hs-args",
   "main": "./index.js",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "pass the converted html into hyperscript to callback",
   "keywords": [
     "html",
@@ -17,7 +17,7 @@
   "repository": "https://github.com/rail-rain/html2hs-args",
   "homepage": "https://github.com/rail-rain/html2hs-args",
   "license": "MIT",
-  "devDependencies": {
+  "dependencies": {
     "htmlparser2": "^3.8.3"
   }
 }
