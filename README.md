@@ -8,7 +8,7 @@ pass the converted html into hyperscript to Second argument
 var html2hs = require('html2hs-args');
 var h = require('hyperscript');
 html2hs("<span><span></span></span>", h, function (err, data) {
-  console.log(data);// > <span><span></span></span>
+  console.log(data.outerHTML);// > <span><span></span></span>
 });
 ```
 
