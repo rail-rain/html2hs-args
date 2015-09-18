@@ -10,14 +10,10 @@
     "hscript"
   ],
   "engines": [
-    "node",
-    "browser + browserfy"
+    "node"
   ],
   "author": "rail-rain",
   "repository": "https://github.com/rail-rain/html2hs-args",
   "homepage": "https://github.com/rail-rain/html2hs-args",
-  "license": "MIT",
-  "dependencies": {
-    "htmlparser2": "^3.8.3"
-  }
+  "license": "MIT"
 }

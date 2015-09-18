@@ -1,53 +1,35 @@
-var Parser = require('htmlparser2').Parser;
+"use strict";
 
-var elementStack = [];
+var HTML_SPLITER = /(<([\w-]+)(?:\s[^>]*)?>(?:.*?<\/\2>)?|[^<]+)/g,
+  TAG_SPLITER = /^<([\w-]+)(\s[^>]*)?>(.*?)(?:<\/\1>)?$/;
 
-function ItemList(parent) {
-    this.parent = parent;
-    this.content = [];
-}
+var tagParse = function (hyper, _, name, attributes, children) {
+  if (children) {
+    children =
+      divideUpNodes(hyper, children.match(HTML_SPLITER), name);
+  }
+  if (attributes) {
+    attributes = attributes
+      .replace(/ ([\w-]+?)="(.+?)"/g, ',"$1":"$2"')
+      .substr(1);
+    attributes = JSON.parse(attributes);
+  }
+  return hyper(name, attributes, children);
+};
 
-ItemList.prototype.add = function (data) {
-    this.content.push(data);
-}
+var divideUpNodes = function (hyper, nodes) {
+  return nodes.map(function (node) {
+    if (node.indexOf("<") === 0) {
+      return node.replace(TAG_SPLITER, tagParse.bind(null, hyper));
+    }
+    return JSON.stringify(node);
+  });
+};
 
-module.exports = function(html, h, cb) {
-    var currentItemList = new ItemList(null);
-
-    var parser = new Parser({
-        onopentag: function (name, attribs) {
-            currentItemList = new ItemList(currentItemList);
-            elementStack.unshift([ name, attribs ]);
-        },
-        ontext: function (text) {
-            currentItemList.add(text);
-        },
-        onclosetag: function (tagname) {
-            var element = elementStack.shift();
-            var elementContent = currentItemList.content;
-
-            currentItemList = currentItemList.parent;
-
-            var attribs = element[1];
-
-            var id = attribs['id'];
-            var idSuffix = id !== undefined ? '#' + id : '';
-            delete attribs['id'];
-
-            var classNames = attribs['class'];
-            var classSuffix = (classNames !== undefined ? classNames : '').split(/\s+/g).filter(function (v) { return v.length > 0; }).map(function (cls) { return '.' + cls; }).join('');
-            delete attribs['class'];
-            
-            var item = h(element[0] + idSuffix + classSuffix,
-                attribs,
-                elementContent);
-            currentItemList.add(item);
-        },
-        onend: function () {
-          cb(null, currentItemList.content[0]);
-        }
-    }, {decodeEntities: true});
-
-  parser.write(html);
-  parser.end();
-}
+module.exports = function(html, hyper, callback) {
+  var result = html
+    .replace(/[\n\r]/g, "")
+    .replace(/<!--.*?-->/g, "")
+    .replace(TAG_SPLITER, tagParse.bind(null, hyper));
+  callback(null, result);
+};
